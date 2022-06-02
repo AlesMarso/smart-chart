@@ -1,9 +1,8 @@
 #include <iostream>
 
-int main()
-{
-	std::cout << "Hello from Smart Chart!!!" << std::endl;
+#include <Windows.h>
 
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
 	return 0;
 }
-
