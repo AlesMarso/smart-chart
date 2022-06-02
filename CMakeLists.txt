@@ -2,4 +2,4 @@
 
 project ("smart-chart")
 
-add_subdirectory ("smart-chart")
+add_subdirectory ("src")

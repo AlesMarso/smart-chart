@@ -1,8 +1,9 @@
-﻿#include <iostream>
+#include <iostream>
 
-int main() {
-
+int main()
+{
 	std::cout << "Hello from Smart Chart!!!" << std::endl;
-	
+
 	return 0;
 }
+
