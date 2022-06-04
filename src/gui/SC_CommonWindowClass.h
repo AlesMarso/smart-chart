@@ -22,6 +22,9 @@ namespace gui
 
 		int Run();
 
+		uint32_t GetWidth() const;
+		uint32_t GetHeight() const;
+
 	public:
 		virtual bool OnPaint(WPARAM, LPARAM);
 		virtual bool OnCreate(WPARAM, LPARAM);
@@ -35,13 +38,13 @@ namespace gui
 		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
 	private:
-		HWND			m_hWnd;
-		HINSTANCE		m_hInstance;
-		LPCSTR			m_WindowTitle;
-		LPCSTR			m_WindowClassName;
-		WNDCLASSEX		m_WndClass;
+		HWND		m_hWnd;
+		HINSTANCE	m_hInstance;
+		LPCSTR		m_WindowTitle;
+		LPCSTR		m_WindowClassName;
+		WNDCLASSEX	m_WndClass;
 
-		uint32_t		m_Width;
-		uint32_t		m_Height;
+		uint32_t	m_Width;
+		uint32_t	m_Height;
 	};
 }

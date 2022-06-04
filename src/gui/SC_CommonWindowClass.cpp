@@ -1,7 +1,7 @@
 #include "SC_CommonWindowClass.h"
 
-constexpr uint32_t WINDOW_WIDTH_DEF = 600;
-constexpr uint32_t WINDOW_HEIGHT_DEF = 500;
+constexpr uint32_t WINDOW_WIDTH_DEF = 1500;
+constexpr uint32_t WINDOW_HEIGHT_DEF = 900;
 
 gui::SC_CommonWindowClass::SC_CommonWindowClass()
 	: m_hInstance(GetModuleHandle(nullptr)),
@@ -75,9 +75,7 @@ int gui::SC_CommonWindowClass::Run()
 		nullptr, nullptr, m_hInstance, this);
 	
 	if (m_hWnd == nullptr)
-	{
 		return -1;
-	}
 	
 	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
@@ -93,6 +91,16 @@ int gui::SC_CommonWindowClass::Run()
 	}
 
 	return static_cast<int>(msg.wParam);
+}
+
+uint32_t gui::SC_CommonWindowClass::GetWidth() const
+{
+	return m_Width;
+}
+
+uint32_t gui::SC_CommonWindowClass::GetHeight() const
+{
+	return m_Height;
 }
 
 bool gui::SC_CommonWindowClass::OnPaint(WPARAM, LPARAM)
