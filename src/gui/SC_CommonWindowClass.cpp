@@ -31,10 +31,8 @@ gui::SC_CommonWindowClass::~SC_CommonWindowClass()
 {
 }
 
-bool gui::SC_CommonWindowClass::Init(const char* title)
+bool gui::SC_CommonWindowClass::Init()
 {
-	m_WindowTitle = title;
-
 	m_WndClass.cbSize = sizeof(WNDCLASSEX);
 	m_WndClass.hInstance = m_hInstance;
 	m_WndClass.lpfnWndProc = MessageHandleSetup;
@@ -43,13 +41,30 @@ bool gui::SC_CommonWindowClass::Init(const char* title)
 	return RegisterClassEx(&m_WndClass);
 }
 
-bool gui::SC_CommonWindowClass::Init(HINSTANCE hInst, const char* title)
+bool gui::SC_CommonWindowClass::Init(HINSTANCE hInst)
 {
 	m_hInstance = hInst;
 	
-	return Init(title);
+	return Init();
 }
 
+bool gui::SC_CommonWindowClass::Create(const char* title)
+{
+	m_WindowTitle = title;
+
+	m_hWnd = CreateWindowEx(0,
+		m_WindowClassName, m_WindowTitle,
+		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU,
+		CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height,
+		nullptr, nullptr, m_hInstance, this);
+
+	if (m_hWnd == nullptr)
+		return false;
+
+	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+
+	return true;
+}
 
 HWND gui::SC_CommonWindowClass::GetHWND() const
 {
@@ -68,17 +83,6 @@ const char* gui::SC_CommonWindowClass::GetWindowTitle()
 
 int gui::SC_CommonWindowClass::Run()
 {
-	m_hWnd = CreateWindowEx(0,
-		m_WindowClassName, m_WindowTitle,
-		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height,
-		nullptr, nullptr, m_hInstance, this);
-	
-	if (m_hWnd == nullptr)
-		return -1;
-	
-	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-
 	MSG msg;
 
 	while (GetMessage(&msg, nullptr, 0, 0) > 0)

@@ -6,8 +6,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {
 	gui::SC_CommonWindowClass testWindow;
 
-	if (testWindow.Init(hInstance, "Smart Chart"))
-		return testWindow.Run();
+	if (testWindow.Init(hInstance))
+	{
+		if(testWindow.Create("Smart Chart"))
+			return testWindow.Run();
+	}
 
 	return 0;
 }

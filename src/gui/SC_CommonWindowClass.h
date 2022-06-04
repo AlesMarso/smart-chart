@@ -13,14 +13,16 @@ namespace gui
 		~SC_CommonWindowClass();
 
 	public:
-		bool Init(const char*);
-		bool Init(HINSTANCE, const char*);
+		virtual bool Init();
+		virtual bool Init(HINSTANCE);
+
+		virtual bool Create(const char*);
+
+		virtual int Run();
 
 		HWND GetHWND() const;
 		HINSTANCE GetInstance() const;
 		const char* GetWindowTitle();
-
-		int Run();
 
 		uint32_t GetWidth() const;
 		uint32_t GetHeight() const;
@@ -35,7 +37,8 @@ namespace gui
 		static LRESULT MessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
 		static LRESULT MessageHandleThunk(HWND, UINT, WPARAM, LPARAM);
 
-		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
+	protected:
+		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
 	private:
 		HWND		m_hWnd;
