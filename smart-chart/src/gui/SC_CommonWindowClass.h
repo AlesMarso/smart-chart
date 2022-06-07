@@ -13,12 +13,12 @@ namespace gui
 		~SC_CommonWindowClass();
 
 	public:
-		virtual bool Init();
-		virtual bool Init(HINSTANCE);
+		bool Init();
+		bool Init(HINSTANCE);
 
-		virtual bool Create(const char*);
+		bool Create(const char*);
 
-		virtual int Run();
+		int Run();
 
 		HWND GetHWND() const;
 		HINSTANCE GetInstance() const;
@@ -28,17 +28,17 @@ namespace gui
 		uint32_t GetHeight() const;
 
 	public:
-		virtual bool OnPaint(WPARAM, LPARAM);
-		virtual bool OnCreate(WPARAM, LPARAM);
-		virtual bool OnSize(WPARAM, LPARAM);
-		virtual bool OnClose(WPARAM, LPARAM);
+		bool OnPaint(WPARAM, LPARAM);
+		bool OnCreate(WPARAM, LPARAM);
+		bool OnSize(WPARAM, LPARAM);
+		bool OnClose(WPARAM, LPARAM);
 
 	private:
 		static LRESULT MessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
 		static LRESULT MessageHandleThunk(HWND, UINT, WPARAM, LPARAM);
 
 	protected:
-		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
+		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
 	private:
 		HWND		m_hWnd;

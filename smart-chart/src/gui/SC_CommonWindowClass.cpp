@@ -44,7 +44,7 @@ bool gui::SC_CommonWindowClass::Init()
 bool gui::SC_CommonWindowClass::Init(HINSTANCE hInst)
 {
 	m_hInstance = hInst;
-	
+
 	return Init();
 }
 
@@ -138,7 +138,7 @@ LRESULT gui::SC_CommonWindowClass::MessageHandleSetup(HWND hWnd, UINT msg, WPARA
 
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&SC_CommonWindowClass::MessageHandleThunk));
-		
+
 		return pWnd->MessageHandle(hWnd, msg, wParam, lParam);
 	}
 
