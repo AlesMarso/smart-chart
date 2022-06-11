@@ -7,6 +7,8 @@
 
 #include "resource.h"
 
+#include "SC_EventContainer.h"
+
 #define CONTROL_ID (LOWORD(wParam))
 #define ACTION_ID (HIWORD(wParam))
 
@@ -29,6 +31,7 @@ namespace gui
 		void SetHWND(HWND);
 		void SetWindowTitle(const char*);
 		void SetWindowClassName(const char*);
+		void SetEvent(uint32_t, uint32_t, Event);
 
 	public:
 		virtual bool Init(HINSTANCE);
@@ -55,5 +58,7 @@ namespace gui
 
 		uint32_t	m_Width;
 		uint32_t	m_Height;
+
+		SC_EventContainer m_Events;
 	};
 }

@@ -76,6 +76,11 @@ void gui::SC_CommonWindowClass::SetWindowClassName(const char* class_name)
 	m_WindowClassName = (char*)class_name;
 }
 
+void gui::SC_CommonWindowClass::SetEvent(uint32_t event_id, uint32_t action_id, Event func)
+{
+	m_Events.SetEvent(event_id, action_id, func);
+}
+
 LRESULT gui::SC_CommonWindowClass::MessageHandleSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (msg == WM_NCCREATE)
@@ -113,5 +118,8 @@ LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wPa
 
 	case WM_CLOSE:
 		return OnClose(hWnd, wParam, lParam);
+
+	case WM_COMMAND:
+		return m_Events(CONTROL_ID, ACTION_ID, hWnd, wParam, lParam);
 	}
 }
