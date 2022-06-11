@@ -6,64 +6,29 @@ constexpr uint32_t WINDOW_HEIGHT_DEF = 900;
 gui::SC_CommonWindowClass::SC_CommonWindowClass()
 	: m_hInstance(GetModuleHandle(nullptr)),
 	m_hWnd(nullptr),
-	m_WindowTitle(nullptr),
 	m_Width(WINDOW_WIDTH_DEF),
 	m_Height(WINDOW_HEIGHT_DEF)
 {
-	m_WindowClassName = "SmartChartMarsoWindowClassName";
-	ZeroMemory(&m_WndClass, sizeof(m_WndClass));
-}
-
-gui::SC_CommonWindowClass::SC_CommonWindowClass(HINSTANCE hInst)
-	: m_hWnd(nullptr),
-	m_WindowTitle(nullptr),
-	m_Width(WINDOW_WIDTH_DEF),
-	m_Height(WINDOW_HEIGHT_DEF)
-{
-	m_hInstance = hInst;
-
-	m_WindowClassName = "SmartChartMarsoWindowClassName";
-
-	ZeroMemory(&m_WndClass, sizeof(m_WndClass));
 }
 
 gui::SC_CommonWindowClass::~SC_CommonWindowClass()
 {
 }
 
-bool gui::SC_CommonWindowClass::Init()
-{
-	m_WndClass.cbSize = sizeof(WNDCLASSEX);
-	m_WndClass.hInstance = m_hInstance;
-	m_WndClass.lpfnWndProc = MessageHandleSetup;
-	m_WndClass.lpszClassName = m_WindowClassName;
-
-	return RegisterClassEx(&m_WndClass);
-}
-
 bool gui::SC_CommonWindowClass::Init(HINSTANCE hInst)
 {
 	m_hInstance = hInst;
 
-	return Init();
-}
+	WNDCLASSEX wndClass;
+	ZeroMemory(&wndClass, sizeof(wndClass));
 
-bool gui::SC_CommonWindowClass::Create(const char* title)
-{
-	m_WindowTitle = title;
+	wndClass.cbSize = sizeof(WNDCLASSEX);
+	wndClass.hInstance = m_hInstance;
+	wndClass.lpfnWndProc = MessageHandleSetup;
+	wndClass.lpszClassName = m_WindowClassName;
+	wndClass.lpszMenuName = MAKEINTRESOURCEA(IDR_MAIN_MENU);
 
-	m_hWnd = CreateWindowEx(0,
-		m_WindowClassName, m_WindowTitle,
-		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height,
-		nullptr, nullptr, m_hInstance, this);
-
-	if (m_hWnd == nullptr)
-		return false;
-
-	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-
-	return true;
+	return RegisterClassEx(&wndClass);
 }
 
 HWND gui::SC_CommonWindowClass::GetHWND() const
@@ -78,23 +43,7 @@ HINSTANCE gui::SC_CommonWindowClass::GetInstance() const
 
 const char* gui::SC_CommonWindowClass::GetWindowTitle()
 {
-	return m_WindowTitle;
-}
-
-int gui::SC_CommonWindowClass::Run()
-{
-	MSG msg;
-
-	while (GetMessage(&msg, nullptr, 0, 0) > 0)
-	{
-		if (msg.message == WM_QUIT)
-			return static_cast<int>(msg.wParam);
-
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return static_cast<int>(msg.wParam);
+	return nullptr;
 }
 
 uint32_t gui::SC_CommonWindowClass::GetWidth() const
@@ -107,25 +56,24 @@ uint32_t gui::SC_CommonWindowClass::GetHeight() const
 	return m_Height;
 }
 
-bool gui::SC_CommonWindowClass::OnPaint(WPARAM, LPARAM)
+const char* gui::SC_CommonWindowClass::GetWindowClassName() const
 {
-	return false;
+	return (const char*)m_WindowClassName;
 }
 
-bool gui::SC_CommonWindowClass::OnCreate(WPARAM, LPARAM)
+void gui::SC_CommonWindowClass::SetHWND(HWND hwnd)
 {
-	return false;
+	m_hWnd = hwnd;
 }
 
-bool gui::SC_CommonWindowClass::OnSize(WPARAM, LPARAM)
+void gui::SC_CommonWindowClass::SetWindowTitle(const char* title)
 {
-	return false;
+	SetWindowText(m_hWnd, title);
 }
 
-bool gui::SC_CommonWindowClass::OnClose(WPARAM, LPARAM)
+void gui::SC_CommonWindowClass::SetWindowClassName(const char* class_name)
 {
-	PostQuitMessage(0);
-	return false;
+	m_WindowClassName = (char*)class_name;
 }
 
 LRESULT gui::SC_CommonWindowClass::MessageHandleSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -138,8 +86,6 @@ LRESULT gui::SC_CommonWindowClass::MessageHandleSetup(HWND hWnd, UINT msg, WPARA
 
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&SC_CommonWindowClass::MessageHandleThunk));
-
-		return pWnd->MessageHandle(hWnd, msg, wParam, lParam);
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -156,18 +102,16 @@ LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wPa
 {
 	switch (msg)
 	{
-	case WM_CLOSE:
-		return OnClose(wParam, lParam);
-
 	case WM_CREATE:
-		return OnCreate(wParam, lParam);
+		return OnCreate(hWnd, wParam, lParam);
 
 	case WM_PAINT:
-		return OnPaint(wParam, lParam);
+		return OnPaint(hWnd, wParam, lParam);
 
 	case WM_SIZE:
-		return OnSize(wParam, lParam);
-	}
+		return OnSize(hWnd, wParam, lParam);
 
-	return DefWindowProc(hWnd, msg, wParam, lParam);
+	case WM_CLOSE:
+		return OnClose(hWnd, wParam, lParam);
+	}
 }

@@ -21,13 +21,27 @@
     <ClCompile Include="src\gui\SC_CommonWindowClass.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\SC_MDIClientWindow.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gui\SC_CommonWindowClass.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="res\resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\SC_MDIClientWindow.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\smart-chart.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

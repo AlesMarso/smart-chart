@@ -2,6 +2,13 @@
 
 #include <Windows.h>
 #include <cstdint>
+#include <functional>
+#include <map>
+
+#include "resource.h"
+
+#define CONTROL_ID (LOWORD(wParam))
+#define ACTION_ID (HIWORD(wParam))
 
 namespace gui
 {
@@ -9,43 +16,42 @@ namespace gui
 	{
 	public:
 		SC_CommonWindowClass();
-		SC_CommonWindowClass(HINSTANCE);
-		~SC_CommonWindowClass();
+		virtual ~SC_CommonWindowClass();
 
 	public:
-		bool Init();
-		bool Init(HINSTANCE);
-
-		bool Create(const char*);
-
-		int Run();
-
 		HWND GetHWND() const;
 		HINSTANCE GetInstance() const;
 		const char* GetWindowTitle();
-
 		uint32_t GetWidth() const;
 		uint32_t GetHeight() const;
+		const char* GetWindowClassName() const;
+		
+		void SetHWND(HWND);
+		void SetWindowTitle(const char*);
+		void SetWindowClassName(const char*);
 
 	public:
-		bool OnPaint(WPARAM, LPARAM);
-		bool OnCreate(WPARAM, LPARAM);
-		bool OnSize(WPARAM, LPARAM);
-		bool OnClose(WPARAM, LPARAM);
+		virtual bool Init(HINSTANCE);
+
+	public:
+		virtual bool Create(const char*, HWND) = 0;
+		virtual bool OnPaint(HWND, WPARAM, LPARAM) = 0;
+		virtual bool OnCreate(HWND, WPARAM, LPARAM) = 0;
+		virtual bool OnSize(HWND, WPARAM, LPARAM) = 0;
+		virtual bool OnClose(HWND, WPARAM, LPARAM) = 0;
 
 	private:
 		static LRESULT MessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
 		static LRESULT MessageHandleThunk(HWND, UINT, WPARAM, LPARAM);
 
 	protected:
-		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
+		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
 	private:
 		HWND		m_hWnd;
 		HINSTANCE	m_hInstance;
-		LPCSTR		m_WindowTitle;
-		LPCSTR		m_WindowClassName;
-		WNDCLASSEX	m_WndClass;
+
+		char*		m_WindowClassName;
 
 		uint32_t	m_Width;
 		uint32_t	m_Height;
