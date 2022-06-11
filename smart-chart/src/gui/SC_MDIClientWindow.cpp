@@ -43,7 +43,7 @@ bool gui::SC_MDIClientWindow::OnCreate(HWND hWnd, WPARAM, LPARAM)
 	CLIENTCREATESTRUCT mdiClient;
 
 	mdiClient.hWindowMenu = nullptr;
-	mdiClient.idFirstChild = 50000;
+	mdiClient.idFirstChild = IDM_FIRSTCHILD;
 
 	m_hWndMDIClient = CreateWindow(
 		TEXT("MDICLIENT"),
