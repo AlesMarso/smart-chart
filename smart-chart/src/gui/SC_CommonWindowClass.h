@@ -6,6 +6,7 @@
 #include <map>
 
 #include "resource.h"
+#include "utils/util.h"
 
 #include "SC_EventContainer.h"
 
@@ -23,19 +24,18 @@ namespace gui
 	public:
 		HWND GetHWND() const;
 		HINSTANCE GetInstance() const;
-		const char* GetWindowTitle();
 		uint32_t GetWidth() const;
 		uint32_t GetHeight() const;
-		const char* GetWindowClassName() const;
-		
+
 		void SetHWND(HWND);
-		void SetWindowTitle(const char*);
-		void SetWindowClassName(const char*);
 		void SetEvent(uint32_t, uint32_t, Event);
 
+		virtual const char* GetWindowClassName() = 0;
+		virtual const char* GetWindowTitle() = 0;
+
 	public:
-		virtual bool Init(const char*, HINSTANCE) = 0;
-		virtual bool Create(const char*, HWND) = 0;
+		virtual bool Init(HINSTANCE) = 0;
+		virtual bool Create(HWND) = 0;
 		virtual bool OnPaint(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnCreate(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnSize(HWND, WPARAM, LPARAM) = 0;
@@ -46,11 +46,13 @@ namespace gui
 	protected:
 		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
+	protected:
+		char* m_WindowClassName;
+		char* m_WindowTitle;
+
 	private:
 		HWND		m_hWnd;
 		HINSTANCE	m_hInstance;
-
-		char*		m_WindowClassName;
 
 		uint32_t	m_Width;
 		uint32_t	m_Height;

@@ -4,17 +4,26 @@ gui::SC_MDIClientWindow::SC_MDIClientWindow()
 	: SC_CommonWindowClass::SC_CommonWindowClass(),
 	m_hWndMDIClient(nullptr)
 {
-	m_MdiChildWindowClassName = "SmartChartMdiWindowClassName";
+	m_WindowClassName = utils::resource::GetResString(IDS_MDI_FRMAE_WINDOW_CLASS_NAME);
+	m_WindowTitle = utils::resource::GetResString(IDS_MDI_FRAME_WINDOW_NAME);
 }
 
 gui::SC_MDIClientWindow::~SC_MDIClientWindow()
 {
 }
 
-bool gui::SC_MDIClientWindow::Init(const char*, HINSTANCE hInst)
+const char* gui::SC_MDIClientWindow::GetWindowTitle()
 {
-	SetWindowClassName("SmartChartMDIClientWindowClassName");
+	return "Smart Chart";
+}
 
+const char* gui::SC_MDIClientWindow::GetWindowClassName()
+{
+	return "SmartChartMdiFrameWindowClassName";
+}
+
+bool gui::SC_MDIClientWindow::Init(HINSTANCE hInst)
+{
 	SetEvent(ID_CHART_FINANCE, ID_ACTION_MAIN_MENU, BIND_EVENT(SC_MDIClientWindow::OnNewFinanceChart));
 
 	WNDCLASSEX wndClass;
@@ -29,10 +38,10 @@ bool gui::SC_MDIClientWindow::Init(const char*, HINSTANCE hInst)
 	return RegisterClassEx(&wndClass);
 }
 
-bool gui::SC_MDIClientWindow::Create(const char* title, HWND parent = nullptr)
+bool gui::SC_MDIClientWindow::Create(HWND parent = nullptr)
 {
 	HWND hwnd = CreateWindow(
-		GetWindowClassName(), title,
+		GetWindowClassName(), GetWindowTitle(),
 		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT, GetWidth(), GetHeight(),
 		nullptr, nullptr, GetInstance(), this);
@@ -109,8 +118,8 @@ bool gui::SC_MDIClientWindow::OnNewFinanceChart(HWND, WPARAM, LPARAM)
 {
 	SC_MDIChildWindow* test = new SC_MDIChildWindow();
 
-	if (test->Init("SmartChartMdiChildWindowClassName", GetInstance()))
-		return test->Create("Finance Chart", m_hWndMDIClient);
+	if (test->Init(GetInstance()))
+		return test->Create(m_hWndMDIClient);
 
 	return true;
 }

@@ -68,6 +68,20 @@ BEGIN
     MENUITEM "About",                       ID_ABOUT
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_MDI_FRAME_WINDOW_NAME "Smart Chart"
+    IDS_MDI_FRMAE_WINDOW_CLASS_NAME "SmartChartMdiFrameWindowClassName"
+    IDS_MDI_CHILD_WINDOW_CLASS_NAME "SmartChartMdiChildChartWindowClassName"
+    IDS_FINANCE_WINDOW_TITLE "Finance chart"
+END
+
 #endif    // Русский (Россия) resources
 /////////////////////////////////////////////////////////////////////////////
 

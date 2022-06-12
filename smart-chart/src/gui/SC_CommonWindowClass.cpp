@@ -7,7 +7,9 @@ gui::SC_CommonWindowClass::SC_CommonWindowClass()
 	: m_hInstance(GetModuleHandle(nullptr)),
 	m_hWnd(nullptr),
 	m_Width(WINDOW_WIDTH_DEF),
-	m_Height(WINDOW_HEIGHT_DEF)
+	m_Height(WINDOW_HEIGHT_DEF),
+	m_WindowClassName(nullptr),
+	m_WindowTitle(nullptr)
 {
 }
 
@@ -22,12 +24,10 @@ HWND gui::SC_CommonWindowClass::GetHWND() const
 
 HINSTANCE gui::SC_CommonWindowClass::GetInstance() const
 {
-	return m_hInstance;
-}
+	if (!m_hInstance)
+		return GetModuleHandle(nullptr);
 
-const char* gui::SC_CommonWindowClass::GetWindowTitle()
-{
-	return nullptr;
+	return m_hInstance;
 }
 
 uint32_t gui::SC_CommonWindowClass::GetWidth() const
@@ -40,24 +40,9 @@ uint32_t gui::SC_CommonWindowClass::GetHeight() const
 	return m_Height;
 }
 
-const char* gui::SC_CommonWindowClass::GetWindowClassName() const
-{
-	return (const char*)m_WindowClassName;
-}
-
 void gui::SC_CommonWindowClass::SetHWND(HWND hwnd)
 {
 	m_hWnd = hwnd;
-}
-
-void gui::SC_CommonWindowClass::SetWindowTitle(const char* title)
-{
-	SetWindowText(m_hWnd, title);
-}
-
-void gui::SC_CommonWindowClass::SetWindowClassName(const char* class_name)
-{
-	m_WindowClassName = (char*)class_name;
 }
 
 void gui::SC_CommonWindowClass::SetEvent(uint32_t event_id, uint32_t action_id, Event func)

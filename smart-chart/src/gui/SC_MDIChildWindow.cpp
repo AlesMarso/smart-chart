@@ -4,7 +4,9 @@ gui::SC_MDIChildWindow::SC_MDIChildWindow()
     : SC_CommonWindowClass::SC_CommonWindowClass()
 {
     m_IsClassInited = false;
-    SetWindowClassName("TestMDIChild");
+
+    m_WindowClassName = utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME);
+    m_WindowTitle = utils::resource::GetResString(IDS_FINANCE_WINDOW_TITLE);
 }
 
 gui::SC_MDIChildWindow::~SC_MDIChildWindow()
@@ -12,31 +14,45 @@ gui::SC_MDIChildWindow::~SC_MDIChildWindow()
     UnregisterClass(GetWindowClassName(), GetInstance());
 }
 
-bool gui::SC_MDIChildWindow::Init(const char* windowclassname, HINSTANCE hInst)
+const char* gui::SC_MDIChildWindow::GetWindowTitle()
 {
-    SetWindowClassName(windowclassname);
+    return "Chart";
+}
 
+const char* gui::SC_MDIChildWindow::GetWindowClassName()
+{
+    return "SmartChartMdiChildWindowClassName";
+}
+
+bool gui::SC_MDIChildWindow::Init(HINSTANCE hInst)
+{
     WNDCLASSEX wndMdiChildClass;
 
-    if (GetClassInfoEx(hInst, windowclassname, &wndMdiChildClass))
-        return true;
-
     ZeroMemory(&wndMdiChildClass, sizeof(WNDCLASSEX));
+
+    if (GetClassInfoEx(hInst, GetWindowClassName(), &wndMdiChildClass))
+    {
+        if (wndMdiChildClass.cbSize == sizeof(WNDCLASSEX))
+            return true;
+
+        if (!UnregisterClass(GetWindowClassName(), GetInstance()))
+            return false;
+    }
 
     wndMdiChildClass.cbSize = sizeof(WNDCLASSEX);
     wndMdiChildClass.hInstance = hInst;
     wndMdiChildClass.lpfnWndProc = MDIMessageHandleSetup;
-    wndMdiChildClass.lpszClassName = windowclassname;
+    wndMdiChildClass.lpszClassName = GetWindowClassName();
 
     return RegisterClassEx(&wndMdiChildClass);
 }
 
-bool gui::SC_MDIChildWindow::Create(const char* title, HWND mdiclient)
+bool gui::SC_MDIChildWindow::Create(HWND mdiclient)
 {
     MDICREATESTRUCT mdiChildWindow;
 
     mdiChildWindow.szClass = GetWindowClassName();
-    mdiChildWindow.szTitle = title;
+    mdiChildWindow.szTitle = GetWindowTitle();
     mdiChildWindow.hOwner = GetInstance();
     mdiChildWindow.x = CW_USEDEFAULT;
     mdiChildWindow.y = CW_USEDEFAULT;

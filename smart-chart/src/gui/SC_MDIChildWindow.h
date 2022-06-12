@@ -10,8 +10,11 @@ namespace gui
 		SC_MDIChildWindow();
 		~SC_MDIChildWindow();
 
-		virtual bool Init(const char*, HINSTANCE) override;
-		virtual bool Create(const char*, HWND) override;
+		const char* GetWindowTitle() override;
+		const char* GetWindowClassName() override;
+
+		virtual bool Init(HINSTANCE) override;
+		virtual bool Create(HWND) override;
 		virtual bool OnPaint(HWND, WPARAM, LPARAM);
 		virtual bool OnCreate(HWND, WPARAM, LPARAM);
 		virtual bool OnSize(HWND, WPARAM, LPARAM);

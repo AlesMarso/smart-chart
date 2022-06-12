@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)smart-chart\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)smart-chart\res;$(SolutionDir)smart-chart\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,6 +147,7 @@
     <ClCompile Include="src\gui\SC_MDIClientWindow.cpp" />
     <ClCompile Include="src\gui\SC_CommonWindowClass.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="res\resource.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="src\gui\SC_EventContainer.h" />
     <ClInclude Include="src\gui\SC_MDIClientWindow.h" />
     <ClInclude Include="src\gui\SC_CommonWindowClass.h" />
+    <ClInclude Include="src\utils\util.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

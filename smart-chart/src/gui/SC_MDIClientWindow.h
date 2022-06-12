@@ -12,8 +12,11 @@ namespace gui
 		SC_MDIClientWindow();
 		~SC_MDIClientWindow();
 
-		bool Init(const char*, HINSTANCE) override;
-		bool Create(const char*, HWND) override;
+		const char* GetWindowTitle() override;
+		const char* GetWindowClassName() override;
+
+		bool Init(HINSTANCE) override;
+		bool Create(HWND) override;
 
 		bool OnPaint(HWND, WPARAM, LPARAM) override;
 		bool OnCreate(HWND, WPARAM, LPARAM) override;

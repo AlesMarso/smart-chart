@@ -30,6 +30,9 @@
     <ClCompile Include="src\gui\SC_MDIChildWindow.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\util.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gui\SC_CommonWindowClass.h">
@@ -45,6 +48,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\SC_MDIChildWindow.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\util.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
