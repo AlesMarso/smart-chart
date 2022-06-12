@@ -6,7 +6,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {
 	gui::SC_MDIClientWindow testWindow;
 
-	if (!testWindow.Init(hInstance))
+	if (!testWindow.Init("SmartChartMdiClientFrameWindowClass", hInstance))
 		return -1;
 
 	if (!testWindow.Create("Smart Chart", nullptr))

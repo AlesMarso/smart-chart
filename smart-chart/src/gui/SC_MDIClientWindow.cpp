@@ -4,22 +4,34 @@ gui::SC_MDIClientWindow::SC_MDIClientWindow()
 	: SC_CommonWindowClass::SC_CommonWindowClass(),
 	m_hWndMDIClient(nullptr)
 {
+	m_MdiChildWindowClassName = "SmartChartMdiWindowClassName";
 }
 
 gui::SC_MDIClientWindow::~SC_MDIClientWindow()
 {
 }
 
-bool gui::SC_MDIClientWindow::Init(HINSTANCE hInst)
+bool gui::SC_MDIClientWindow::Init(const char*, HINSTANCE hInst)
 {
 	SetWindowClassName("SmartChartMDIClientWindowClassName");
 
-	return SC_CommonWindowClass::Init(hInst);
+	SetEvent(ID_CHART_FINANCE, ID_ACTION_MAIN_MENU, BIND_EVENT(SC_MDIClientWindow::OnNewFinanceChart));
+
+	WNDCLASSEX wndClass;
+	ZeroMemory(&wndClass, sizeof(wndClass));
+
+	wndClass.cbSize = sizeof(WNDCLASSEX);
+	wndClass.hInstance = hInst;
+	wndClass.lpfnWndProc = MDIClientMessageHandleSetup;
+	wndClass.lpszClassName = GetWindowClassName();
+	wndClass.lpszMenuName = MAKEINTRESOURCEA(IDR_MAIN_MENU);
+
+	return RegisterClassEx(&wndClass);
 }
 
 bool gui::SC_MDIClientWindow::Create(const char* title, HWND parent = nullptr)
 {
-	HWND hwnd = CreateWindowEx(0,
+	HWND hwnd = CreateWindow(
 		GetWindowClassName(), title,
 		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT, GetWidth(), GetHeight(),
@@ -68,13 +80,13 @@ bool gui::SC_MDIClientWindow::OnSize(HWND hWnd, WPARAM, LPARAM)
 			MoveWindow(
 				m_hWndMDIClient,
 				0, 0,
-				clientRect.left - clientRect.right,
-				clientRect.top - clientRect.bottom,
+				clientRect.right,
+				clientRect.bottom,
 				true);
 		}
 	}
 
-    return false;
+    return true;
 }
 
 bool gui::SC_MDIClientWindow::OnClose(HWND, WPARAM, LPARAM)
@@ -83,12 +95,68 @@ bool gui::SC_MDIClientWindow::OnClose(HWND, WPARAM, LPARAM)
     return true;
 }
 
+bool gui::SC_MDIClientWindow::OnDestroy(HWND, WPARAM, LPARAM)
+{
+	return false;
+}
+
+bool gui::SC_MDIClientWindow::OnNcDestroy(HWND, WPARAM, LPARAM)
+{
+	return false;
+}
+
+bool gui::SC_MDIClientWindow::OnNewFinanceChart(HWND, WPARAM, LPARAM)
+{
+	SC_MDIChildWindow* test = new SC_MDIChildWindow();
+
+	if (test->Init("SmartChartMdiChildWindowClassName", GetInstance()))
+		return test->Create("Finance Chart", m_hWndMDIClient);
+
+	return true;
+}
+
+bool gui::SC_MDIClientWindow::OnMDIDestroy(HWND, WPARAM, LPARAM)
+{
+	return false;
+}
+
 LRESULT gui::SC_MDIClientWindow::MessageHandle(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	SC_CommonWindowClass::MessageHandle(hWnd, msg, wParam, lParam);
+	switch (msg)
+	{
+	case WM_MDIDESTROY:
+		OnMDIDestroy(hWnd, wParam, lParam);
+		break;
+
+	default:
+		SC_CommonWindowClass::MessageHandle(hWnd, msg, wParam, lParam);
+		break;
+	}
 
 	if (m_hWndMDIClient)
 		return DefFrameProc(hWnd, m_hWndMDIClient, msg, wParam, lParam);
 	else
 		return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+LRESULT gui::SC_MDIClientWindow::MDIClientMessageHandleSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	if (msg == WM_NCCREATE)
+	{
+		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+
+		SC_MDIClientWindow* pWnd = static_cast<SC_MDIClientWindow*>(pCreate->lpCreateParams);
+
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&SC_MDIClientWindow::MDIClientMessageHandleThunk));
+	}
+
+	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+LRESULT gui::SC_MDIClientWindow::MDIClientMessageHandleThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	SC_MDIClientWindow* const pWnd = reinterpret_cast<SC_MDIClientWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+	return pWnd->MessageHandle(hWnd, msg, wParam, lParam);
 }

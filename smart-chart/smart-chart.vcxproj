@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\gui\SC_MDIChildWindow.cpp" />
     <ClCompile Include="src\gui\SC_EventContainer.cpp" />
     <ClCompile Include="src\gui\SC_MDIClientWindow.cpp" />
     <ClCompile Include="src\gui\SC_CommonWindowClass.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="res\resource.h" />
+    <ClInclude Include="src\gui\SC_MDIChildWindow.h" />
     <ClInclude Include="src\gui\SC_EventContainer.h" />
     <ClInclude Include="src\gui\SC_MDIClientWindow.h" />
     <ClInclude Include="src\gui\SC_CommonWindowClass.h" />

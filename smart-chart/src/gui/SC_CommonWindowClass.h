@@ -34,18 +34,14 @@ namespace gui
 		void SetEvent(uint32_t, uint32_t, Event);
 
 	public:
-		virtual bool Init(HINSTANCE);
-
-	public:
+		virtual bool Init(const char*, HINSTANCE) = 0;
 		virtual bool Create(const char*, HWND) = 0;
 		virtual bool OnPaint(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnCreate(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnSize(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnClose(HWND, WPARAM, LPARAM) = 0;
-
-	private:
-		static LRESULT MessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
-		static LRESULT MessageHandleThunk(HWND, UINT, WPARAM, LPARAM);
+		virtual bool OnDestroy(HWND, WPARAM, LPARAM) = 0;
+		virtual bool OnNcDestroy(HWND, WPARAM, LPARAM) = 0;
 
 	protected:
 		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "SC_CommonWindowClass.h"
+#include "SC_MDIChildWindow.h"
+
 
 namespace gui
 {
@@ -10,18 +12,29 @@ namespace gui
 		SC_MDIClientWindow();
 		~SC_MDIClientWindow();
 
-		bool Init(HINSTANCE) override;
+		bool Init(const char*, HINSTANCE) override;
 		bool Create(const char*, HWND) override;
 
 		bool OnPaint(HWND, WPARAM, LPARAM) override;
 		bool OnCreate(HWND, WPARAM, LPARAM) override;
 		bool OnSize(HWND, WPARAM, LPARAM) override;
 		bool OnClose(HWND, WPARAM, LPARAM) override;
+		bool OnDestroy(HWND, WPARAM, LPARAM) override;
+		bool OnNcDestroy(HWND, WPARAM, LPARAM) override;
 
 		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM) override;
 
+	public:
+		bool OnNewFinanceChart(HWND, WPARAM, LPARAM);
+		bool OnMDIDestroy(HWND, WPARAM, LPARAM);
+
+	private:
+		static LRESULT MDIClientMessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
+		static LRESULT MDIClientMessageHandleThunk(HWND, UINT, WPARAM, LPARAM);
+
 	private:
 		HWND m_hWndMDIClient;
+		const char* m_MdiChildWindowClassName;
 	};
 
 }

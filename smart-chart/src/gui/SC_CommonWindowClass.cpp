@@ -15,22 +15,6 @@ gui::SC_CommonWindowClass::~SC_CommonWindowClass()
 {
 }
 
-bool gui::SC_CommonWindowClass::Init(HINSTANCE hInst)
-{
-	m_hInstance = hInst;
-
-	WNDCLASSEX wndClass;
-	ZeroMemory(&wndClass, sizeof(wndClass));
-
-	wndClass.cbSize = sizeof(WNDCLASSEX);
-	wndClass.hInstance = m_hInstance;
-	wndClass.lpfnWndProc = MessageHandleSetup;
-	wndClass.lpszClassName = m_WindowClassName;
-	wndClass.lpszMenuName = MAKEINTRESOURCEA(IDR_MAIN_MENU);
-
-	return RegisterClassEx(&wndClass);
-}
-
 HWND gui::SC_CommonWindowClass::GetHWND() const
 {
 	return m_hWnd;
@@ -81,28 +65,6 @@ void gui::SC_CommonWindowClass::SetEvent(uint32_t event_id, uint32_t action_id, 
 	m_Events.SetEvent(event_id, action_id, func);
 }
 
-LRESULT gui::SC_CommonWindowClass::MessageHandleSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	if (msg == WM_NCCREATE)
-	{
-		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
-
-		SC_CommonWindowClass* pWnd = static_cast<SC_CommonWindowClass*>(pCreate->lpCreateParams);
-
-		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
-		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&SC_CommonWindowClass::MessageHandleThunk));
-	}
-
-	return DefWindowProc(hWnd, msg, wParam, lParam);
-}
-
-LRESULT gui::SC_CommonWindowClass::MessageHandleThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	SC_CommonWindowClass* const pWnd = reinterpret_cast<SC_CommonWindowClass*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-	return pWnd->MessageHandle(hWnd, msg, wParam, lParam);
-}
-
 LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -118,6 +80,12 @@ LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wPa
 
 	case WM_CLOSE:
 		return OnClose(hWnd, wParam, lParam);
+
+	case WM_DESTROY:
+		return OnDestroy(hWnd, wParam, lParam);
+
+	case WM_NCDESTROY:
+		return OnNcDestroy(hWnd, wParam, lParam);
 
 	case WM_COMMAND:
 		return m_Events(CONTROL_ID, ACTION_ID, hWnd, wParam, lParam);
