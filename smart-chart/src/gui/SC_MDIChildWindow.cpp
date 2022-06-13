@@ -4,24 +4,20 @@ gui::SC_MDIChildWindow::SC_MDIChildWindow()
     : SC_CommonWindowClass::SC_CommonWindowClass()
 {
     m_IsClassInited = false;
-
-    m_WindowClassName = utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME);
-    m_WindowTitle = utils::resource::GetResString(IDS_FINANCE_WINDOW_TITLE);
 }
 
 gui::SC_MDIChildWindow::~SC_MDIChildWindow()
 {
-    UnregisterClass(GetWindowClassName(), GetInstance());
 }
 
 const char* gui::SC_MDIChildWindow::GetWindowTitle()
 {
-    return "Chart";
+    return utils::resource::GetResString(IDS_FINANCE_WINDOW_TITLE);
 }
 
 const char* gui::SC_MDIChildWindow::GetWindowClassName()
 {
-    return "SmartChartMdiChildWindowClassName";
+    return utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME);
 }
 
 bool gui::SC_MDIChildWindow::Init(HINSTANCE hInst)
@@ -31,13 +27,7 @@ bool gui::SC_MDIChildWindow::Init(HINSTANCE hInst)
     ZeroMemory(&wndMdiChildClass, sizeof(WNDCLASSEX));
 
     if (GetClassInfoEx(hInst, GetWindowClassName(), &wndMdiChildClass))
-    {
-        if (wndMdiChildClass.cbSize == sizeof(WNDCLASSEX))
-            return true;
-
-        if (!UnregisterClass(GetWindowClassName(), GetInstance()))
-            return false;
-    }
+        return true;
 
     wndMdiChildClass.cbSize = sizeof(WNDCLASSEX);
     wndMdiChildClass.hInstance = hInst;

@@ -7,9 +7,7 @@ gui::SC_CommonWindowClass::SC_CommonWindowClass()
 	: m_hInstance(GetModuleHandle(nullptr)),
 	m_hWnd(nullptr),
 	m_Width(WINDOW_WIDTH_DEF),
-	m_Height(WINDOW_HEIGHT_DEF),
-	m_WindowClassName(nullptr),
-	m_WindowTitle(nullptr)
+	m_Height(WINDOW_HEIGHT_DEF)
 {
 }
 

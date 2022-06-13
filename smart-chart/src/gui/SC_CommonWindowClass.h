@@ -46,10 +46,6 @@ namespace gui
 	protected:
 		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);
 
-	protected:
-		char* m_WindowClassName;
-		char* m_WindowTitle;
-
 	private:
 		HWND		m_hWnd;
 		HINSTANCE	m_hInstance;

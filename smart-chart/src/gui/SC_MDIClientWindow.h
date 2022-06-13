@@ -37,7 +37,6 @@ namespace gui
 
 	private:
 		HWND m_hWndMDIClient;
-		const char* m_MdiChildWindowClassName;
 	};
 
 }

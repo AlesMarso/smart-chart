@@ -4,22 +4,22 @@ gui::SC_MDIClientWindow::SC_MDIClientWindow()
 	: SC_CommonWindowClass::SC_CommonWindowClass(),
 	m_hWndMDIClient(nullptr)
 {
-	m_WindowClassName = utils::resource::GetResString(IDS_MDI_FRMAE_WINDOW_CLASS_NAME);
-	m_WindowTitle = utils::resource::GetResString(IDS_MDI_FRAME_WINDOW_NAME);
 }
 
 gui::SC_MDIClientWindow::~SC_MDIClientWindow()
 {
+	UnregisterClass(GetWindowClassName(), GetInstance());
+	UnregisterClass(utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME), GetInstance());
 }
 
 const char* gui::SC_MDIClientWindow::GetWindowTitle()
 {
-	return "Smart Chart";
+	return utils::resource::GetResString(IDS_MDI_FRAME_WINDOW_NAME);
 }
 
 const char* gui::SC_MDIClientWindow::GetWindowClassName()
 {
-	return "SmartChartMdiFrameWindowClassName";
+	return utils::resource::GetResString(IDS_MDI_FRMAE_WINDOW_CLASS_NAME);
 }
 
 bool gui::SC_MDIClientWindow::Init(HINSTANCE hInst)
@@ -41,10 +41,17 @@ bool gui::SC_MDIClientWindow::Init(HINSTANCE hInst)
 bool gui::SC_MDIClientWindow::Create(HWND parent = nullptr)
 {
 	HWND hwnd = CreateWindow(
-		GetWindowClassName(), GetWindowTitle(),
+		GetWindowClassName(), 
+		GetWindowTitle(),
 		WS_CAPTION | WS_OVERLAPPEDWINDOW | WS_SYSMENU | WS_VISIBLE,
-		CW_USEDEFAULT, CW_USEDEFAULT, GetWidth(), GetHeight(),
-		nullptr, nullptr, GetInstance(), this);
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT, 
+		GetWidth(), 
+		GetHeight(),
+		parent, 
+		nullptr, 
+		GetInstance(), 
+		this);
 
 	if (!hwnd)
 		return false;
@@ -84,15 +91,9 @@ bool gui::SC_MDIClientWindow::OnSize(HWND hWnd, WPARAM, LPARAM)
 	if (m_hWndMDIClient)
 	{
 		RECT clientRect;
+		
 		if (GetClientRect(hWnd, &clientRect))
-		{
-			MoveWindow(
-				m_hWndMDIClient,
-				0, 0,
-				clientRect.right,
-				clientRect.bottom,
-				true);
-		}
+			MoveWindow(m_hWndMDIClient, 0, 0, clientRect.right, clientRect.bottom, true);
 	}
 
     return true;
@@ -106,22 +107,29 @@ bool gui::SC_MDIClientWindow::OnClose(HWND, WPARAM, LPARAM)
 
 bool gui::SC_MDIClientWindow::OnDestroy(HWND, WPARAM, LPARAM)
 {
-	return false;
+	return true;
 }
 
-bool gui::SC_MDIClientWindow::OnNcDestroy(HWND, WPARAM, LPARAM)
+bool gui::SC_MDIClientWindow::OnNcDestroy(HWND hWnd, WPARAM, LPARAM)
 {
-	return false;
+	SC_MDIClientWindow* const pWnd = reinterpret_cast<SC_MDIClientWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+	if (pWnd)
+		delete pWnd;
+
+	SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(DefWindowProc));
+
+	return true;
 }
 
 bool gui::SC_MDIClientWindow::OnNewFinanceChart(HWND, WPARAM, LPARAM)
 {
-	SC_MDIChildWindow* test = new SC_MDIChildWindow();
+	SC_MDIChildWindow* pFinanceChart = new SC_MDIChildWindow();
 
-	if (test->Init(GetInstance()))
-		return test->Create(m_hWndMDIClient);
+	if (pFinanceChart->Init(GetInstance()))
+		return pFinanceChart->Create(m_hWndMDIClient);
 
-	return true;
+	return false;
 }
 
 bool gui::SC_MDIClientWindow::OnMDIDestroy(HWND, WPARAM, LPARAM)
