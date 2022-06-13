@@ -48,27 +48,14 @@ bool gui::SC_MDIChildWindow::Create(HWND mdiclient)
     mdiChildWindow.y = CW_USEDEFAULT;
     mdiChildWindow.cx = CW_USEDEFAULT;
     mdiChildWindow.cy = CW_USEDEFAULT;
-    mdiChildWindow.style = 0;
+    mdiChildWindow.style = CS_HREDRAW | CS_VREDRAW;
     mdiChildWindow.lParam = (LPARAM)this;
 
     HWND hwnd = (HWND)SendMessage(mdiclient, WM_MDICREATE, 0, (LPARAM)(LPMDICREATESTRUCT)&mdiChildWindow);
 
+    UpdateWindow(hwnd);
+
     return hwnd != nullptr;
-}
-
-bool gui::SC_MDIChildWindow::OnPaint(HWND, WPARAM, LPARAM)
-{
-    return false;
-}
-
-bool gui::SC_MDIChildWindow::OnCreate(HWND, WPARAM, LPARAM)
-{
-    return false;
-}
-
-bool gui::SC_MDIChildWindow::OnSize(HWND, WPARAM, LPARAM)
-{
-    return false;
 }
 
 bool gui::SC_MDIChildWindow::OnClose(HWND, WPARAM, LPARAM)

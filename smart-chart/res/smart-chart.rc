@@ -60,6 +60,7 @@ BEGIN
     BEGIN
         MENUITEM "Finance",                     ID_CHART_FINANCE
         MENUITEM "Fourier",                     ID_CHART_FOURIER
+        MENUITEM "Functions",                   ID_CHART_FUNCTIONS
     END
     POPUP "Settings"
     BEGIN

@@ -38,6 +38,11 @@ uint32_t gui::SC_CommonWindowClass::GetHeight() const
 	return m_Height;
 }
 
+HDC gui::SC_CommonWindowClass::GetDC() const
+{
+	return GetWindowDC(m_hWnd);
+}
+
 void gui::SC_CommonWindowClass::SetHWND(HWND hwnd)
 {
 	m_hWnd = hwnd;
@@ -56,6 +61,7 @@ LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wPa
 		return OnCreate(hWnd, wParam, lParam);
 
 	case WM_PAINT:
+	case WM_NCPAINT:
 		return OnPaint(hWnd, wParam, lParam);
 
 	case WM_SIZE:
@@ -69,6 +75,9 @@ LRESULT gui::SC_CommonWindowClass::MessageHandle(HWND hWnd, UINT msg, WPARAM wPa
 
 	case WM_NCDESTROY:
 		return OnNcDestroy(hWnd, wParam, lParam);
+
+	case WM_ERASEBKGND:
+		return OnEraseBackground(hWnd, wParam, lParam);
 
 	case WM_COMMAND:
 		return m_Events(CONTROL_ID, ACTION_ID, hWnd, wParam, lParam);

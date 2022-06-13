@@ -16,7 +16,7 @@ namespace gui
 	{
 	public:
 		SC_EventContainer() = default;
-		~SC_EventContainer() = default;
+		~SC_EventContainer();
 
 		void SetEvent(uint32_t, uint32_t, Event);
 

@@ -26,6 +26,7 @@ namespace gui
 		HINSTANCE GetInstance() const;
 		uint32_t GetWidth() const;
 		uint32_t GetHeight() const;
+		HDC GetDC() const;
 
 		void SetHWND(HWND);
 		void SetEvent(uint32_t, uint32_t, Event);
@@ -42,6 +43,7 @@ namespace gui
 		virtual bool OnClose(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnDestroy(HWND, WPARAM, LPARAM) = 0;
 		virtual bool OnNcDestroy(HWND, WPARAM, LPARAM) = 0;
+		virtual bool OnEraseBackground(HWND, WPARAM, LPARAM) = 0;
 
 	protected:
 		virtual LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM);

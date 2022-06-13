@@ -15,14 +15,11 @@ namespace gui
 
 		virtual bool Init(HINSTANCE) override;
 		virtual bool Create(HWND) override;
-		virtual bool OnPaint(HWND, WPARAM, LPARAM);
-		virtual bool OnCreate(HWND, WPARAM, LPARAM);
-		virtual bool OnSize(HWND, WPARAM, LPARAM);
+		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM) override;
+
 		virtual bool OnClose(HWND, WPARAM, LPARAM);
 		virtual bool OnDestroy(HWND, WPARAM, LPARAM);
 		virtual bool OnNcDestroy(HWND, WPARAM, LPARAM);
-
-		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM) override;
 
 	private:
 		static LRESULT MDIMessageHandleSetup(HWND, UINT, WPARAM, LPARAM);

@@ -8,8 +8,8 @@ gui::SC_MDIClientWindow::SC_MDIClientWindow()
 
 gui::SC_MDIClientWindow::~SC_MDIClientWindow()
 {
-	UnregisterClass(GetWindowClassName(), GetInstance());
-	UnregisterClass(utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME), GetInstance());
+	//UnregisterClass(GetWindowClassName(), GetInstance());
+	//UnregisterClass(utils::resource::GetResString(IDS_MDI_CHILD_WINDOW_CLASS_NAME), GetInstance());
 }
 
 const char* gui::SC_MDIClientWindow::GetWindowTitle()
@@ -25,6 +25,7 @@ const char* gui::SC_MDIClientWindow::GetWindowClassName()
 bool gui::SC_MDIClientWindow::Init(HINSTANCE hInst)
 {
 	SetEvent(ID_CHART_FINANCE, ID_ACTION_MAIN_MENU, BIND_EVENT(SC_MDIClientWindow::OnNewFinanceChart));
+	SetEvent(ID_CHART_FUNCTIONS, ID_ACTION_MAIN_MENU, BIND_EVENT(SC_MDIClientWindow::OnNewFunctionChart));
 
 	WNDCLASSEX wndClass;
 	ZeroMemory(&wndClass, sizeof(wndClass));
@@ -63,7 +64,7 @@ bool gui::SC_MDIClientWindow::Create(HWND parent = nullptr)
 
 bool gui::SC_MDIClientWindow::OnPaint(HWND, WPARAM, LPARAM)
 {
-    return false;
+	return false;
 }
 
 bool gui::SC_MDIClientWindow::OnCreate(HWND hWnd, WPARAM, LPARAM)
@@ -112,24 +113,30 @@ bool gui::SC_MDIClientWindow::OnDestroy(HWND, WPARAM, LPARAM)
 
 bool gui::SC_MDIClientWindow::OnNcDestroy(HWND hWnd, WPARAM, LPARAM)
 {
-	SC_MDIClientWindow* const pWnd = reinterpret_cast<SC_MDIClientWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	return false;
+}
 
-	if (pWnd)
-		delete pWnd;
+bool gui::SC_MDIClientWindow::OnEraseBackground(HWND, WPARAM, LPARAM)
+{
+	return false;
+}
 
-	SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(DefWindowProc));
+bool gui::SC_MDIClientWindow::CreateMdiChild(SC_MDIChildWindow* child)
+{
+	if (child->Init(GetInstance()))
+		return child->Create(m_hWndMDIClient);
 
-	return true;
+	return false;
 }
 
 bool gui::SC_MDIClientWindow::OnNewFinanceChart(HWND, WPARAM, LPARAM)
 {
-	SC_MDIChildWindow* pFinanceChart = new SC_MDIChildWindow();
-
-	if (pFinanceChart->Init(GetInstance()))
-		return pFinanceChart->Create(m_hWndMDIClient);
-
 	return false;
+}
+
+bool gui::SC_MDIClientWindow::OnNewFunctionChart(HWND, WPARAM, LPARAM)
+{
+	return CreateMdiChild(new SC_OpenGLChart());
 }
 
 bool gui::SC_MDIClientWindow::OnMDIDestroy(HWND, WPARAM, LPARAM)

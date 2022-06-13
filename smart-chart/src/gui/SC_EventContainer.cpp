@@ -1,5 +1,9 @@
 #include "SC_EventContainer.h"
 
+gui::SC_EventContainer::~SC_EventContainer()
+{
+}
+
 void gui::SC_EventContainer::SetEvent(uint32_t event_id, uint32_t action_id, Event func)
 {
     Action action;

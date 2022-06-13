@@ -2,7 +2,7 @@
 
 #include "SC_CommonWindowClass.h"
 #include "SC_MDIChildWindow.h"
-
+#include "SC_OpenGLChart.h"
 
 namespace gui
 {
@@ -24,12 +24,15 @@ namespace gui
 		bool OnClose(HWND, WPARAM, LPARAM) override;
 		bool OnDestroy(HWND, WPARAM, LPARAM) override;
 		bool OnNcDestroy(HWND, WPARAM, LPARAM) override;
+		bool OnEraseBackground(HWND, WPARAM, LPARAM) override;
 
 		LRESULT MessageHandle(HWND, UINT, WPARAM, LPARAM) override;
 
 	public:
 		bool OnNewFinanceChart(HWND, WPARAM, LPARAM);
+		bool OnNewFunctionChart(HWND, WPARAM, LPARAM);
 		bool OnMDIDestroy(HWND, WPARAM, LPARAM);
+		bool CreateMdiChild(SC_MDIChildWindow*);
 
 	private:
 		static LRESULT MDIClientMessageHandleSetup(HWND, UINT, WPARAM, LPARAM);
