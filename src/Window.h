@@ -9,9 +9,17 @@ namespace chart
 	{
 		struct WndEventArgs
 		{
-			HWND hWnd = nullptr;
-			WPARAM wParam = 0;
-			LPARAM lParam = 0;
+			HWND hWnd_ = nullptr;
+			WPARAM wParam_ = 0;
+			LPARAM lParam_ = 0;
+		};
+
+		struct WndCommandArgs
+		{
+			HWND hWnd_ = nullptr;
+			WORD loWord_ = -1;
+			WORD hiWord_ = -1;
+			LPARAM lParam_ = 0;
 		};
 
 		class Window
@@ -35,11 +43,13 @@ namespace chart
 			LRESULT OnDestroy(const WndEventArgs& args);
 			LRESULT OnClose(const WndEventArgs& args);
 			LRESULT OnNcDestroy(const WndEventArgs& args);
+			LRESULT OnCommand(const WndCommandArgs& args);
+			LRESULT OnMenuCommand(const WndEventArgs& args);
+			LRESULT OnFileAbout(const WndEventArgs& args);
 
 		protected:
 			LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 			static LRESULT MessageHandlerSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-			static LRESULT MessageHandlerThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		protected:
 			HWND hwnd_;

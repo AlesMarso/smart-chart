@@ -39,18 +39,15 @@
     <ClInclude Include="src\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\res.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="res\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="smart-chart.rc">
+    <ResourceCompile Include="res\smart-chart.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 #include <Windows.h>
 #include "Window.h"
 #include "util.h"
-#include "res.h"
+#include "res/resource.h"
 
 void Application::Init(HINSTANCE instance)
 {

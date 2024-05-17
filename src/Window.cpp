@@ -1,7 +1,7 @@
 #include "Window.h"
 
 #include "util.h"
-#include "res.h"
+#include "res/resource.h"
 
 namespace chart
 {
@@ -23,6 +23,7 @@ namespace wnd
 		wndClass_.cbSize = sizeof(WNDCLASSEXA);
 		wndClass_.lpfnWndProc = Window::MessageHandlerSetup;
 		wndClass_.lpszClassName = util::GetString(IDS_SMART_CHART_MAIN_WINDOW_CLASS_NAME);
+		wndClass_.lpszMenuName = MAKEINTRESOURCEA(IDR_MAIN_MENU);
 		wndClass_.hInstance = instance_;
 
 		return RegisterClassExA(&wndClass_);
@@ -93,6 +94,36 @@ namespace wnd
 		return LRESULT();
 	}
 
+	LRESULT Window::OnCommand(const WndCommandArgs& args)
+	{
+		WndEventArgs menu_event = { args.hWnd_, args.loWord_, args.lParam_ };
+
+		switch (args.hiWord_) {
+			case WM_NULL:
+				return OnMenuCommand(menu_event);
+		}
+
+		return LRESULT();
+	}
+
+	LRESULT Window::OnMenuCommand(const WndEventArgs& args)
+	{
+		switch (args.wParam_)
+		{
+		case ID_FILE_ABOUT:
+			return OnFileAbout(args);
+		}
+
+		return LRESULT();
+	}
+
+	LRESULT Window::OnFileAbout(const WndEventArgs& args)
+	{
+		auto res = MessageBoxA(args.hWnd_, "File About click", "FileAbout", MB_OK);
+
+		return LRESULT(FALSE);
+	}
+
 	LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		WndEventArgs args = { hWnd, wParam, lParam };
@@ -116,9 +147,14 @@ namespace wnd
 
 		case WM_CLOSE:
 			return OnClose(args);
+
+		case WM_COMMAND: {
+			WndCommandArgs command = { hWnd, LOWORD(wParam), HIWORD(wParam), lParam };
+			return OnCommand(command);
+		}
 		}
 
-		return DefWindowProcA(hWnd, msg, wParam, lParam);
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
 	LRESULT Window::MessageHandlerSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -157,19 +193,7 @@ namespace wnd
 		}
 		}
 
-		return DefWindowProcA(hWnd, msg, wParam, lParam);
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
-
-	LRESULT Window::MessageHandlerThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-	{
-		Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-		if (pWnd)
-			return pWnd->MessageHandler(hWnd, msg, wParam, lParam);
-
-		return DefWindowProcA(hWnd, msg, wParam, lParam);
-	}
-
-
 }
 }
