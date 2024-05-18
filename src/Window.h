@@ -31,11 +31,13 @@ namespace chart
 			bool Register(HINSTANCE instance);
 			bool Create(HWND parent, const char* name, uint32_t x = CW_USEDEFAULT, uint32_t y = CW_USEDEFAULT, uint32_t width = CW_USEDEFAULT, uint32_t height = CW_USEDEFAULT);
 			bool Destroy();
+			void Render();
 
 			uint32_t GetX() const;
 			uint32_t GetY() const;
 			uint32_t GetWidth() const;
 			uint32_t GetHeight() const;
+			HWND GetHWND() const;
 
 			LRESULT OnCreate(const WndEventArgs& args);
 			LRESULT OnSize(const WndEventArgs& args);
@@ -55,6 +57,7 @@ namespace chart
 			HWND hwnd_;
 			WNDCLASSEXA wndClass_;
 			HINSTANCE instance_;
+			PIXELFORMATDESCRIPTOR pixel_format_;
 
 			uint32_t x_;
 			uint32_t y_;

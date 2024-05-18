@@ -3,12 +3,15 @@
 #include "util.h"
 #include "res/resource.h"
 
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
 namespace chart
 {
 namespace wnd
 {
 	Window::Window()
-		: hwnd_(nullptr), wndClass_({ 0 }), instance_(nullptr), 
+		: hwnd_(nullptr), wndClass_({ 0 }), instance_(nullptr), pixel_format_({ 0 }),
 		x_(CW_USEDEFAULT), y_(CW_USEDEFAULT), 
 		width_(CW_USEDEFAULT), height_(CW_USEDEFAULT)
 	{
@@ -43,6 +46,12 @@ namespace wnd
 		return DestroyWindow(hwnd_) == TRUE;
 	}
 
+	void Window::Render()
+	{
+		glClearColor(1.f, 0.f, 0.f, 0.f);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 	uint32_t Window::GetX() const
 	{
 		return x_;
@@ -63,6 +72,11 @@ namespace wnd
 		return height_;
 	}
 
+	HWND Window::GetHWND() const
+	{
+		return hwnd_;
+	}
+
 	LRESULT Window::OnCreate(const WndEventArgs& args)
 	{
 		return LRESULT();
@@ -70,7 +84,7 @@ namespace wnd
 
 	LRESULT Window::OnSize(const WndEventArgs& args)
 	{
-		return LRESULT();
+		return LRESULT(FALSE);
 	}
 
 	LRESULT Window::OnPaint(const WndEventArgs& args)
@@ -119,8 +133,6 @@ namespace wnd
 
 	LRESULT Window::OnFileAbout(const WndEventArgs& args)
 	{
-		auto res = MessageBoxA(args.hWnd_, "File About click", "FileAbout", MB_OK);
-
 		return LRESULT(FALSE);
 	}
 
